@@ -41,6 +41,47 @@ def get_groq_api_key():
     return ""
 
 
+def _get_config_value(*keys):
+    for key in keys:
+        value = os.environ.get(key, "")
+        if value:
+            return value.strip().strip('"').strip("'")
+
+    if hasattr(st, "secrets"):
+        try:
+            for key in keys:
+                value = st.secrets.get(key)
+                if value:
+                    return str(value).strip().strip('"').strip("'")
+        except StreamlitSecretNotFoundError:
+            pass
+
+    return ""
+
+
+def get_webrtc_rtc_configuration():
+    ice_servers = [
+        {"urls": ["stun:stun.l.google.com:19302"]},
+    ]
+
+    turn_url = _get_config_value("TURN_SERVER_URL")
+    turn_username = _get_config_value("TURN_USERNAME")
+    turn_credential = _get_config_value("TURN_CREDENTIAL", "TURN_PASSWORD")
+
+    if turn_url:
+        turn_server = {"urls": [turn_url]}
+
+        if turn_username:
+            turn_server["username"] = turn_username
+
+        if turn_credential:
+            turn_server["credential"] = turn_credential
+
+        ice_servers.insert(0, turn_server)
+
+    return {"iceServers": ice_servers}
+
+
 def main():
     st.set_page_config(
         page_icon="🏋️‍♀️",
@@ -255,7 +296,7 @@ def main():
             key="exercise-analysis",
             mode=WebRtcMode.SENDRECV,
             video_processor_factory=VideoProcessorClass,
-            rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
+            rtc_configuration=get_webrtc_rtc_configuration(),
             media_stream_constraints={
                 "video": True,
                 "audio": False
