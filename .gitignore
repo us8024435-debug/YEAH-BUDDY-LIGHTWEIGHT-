@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.venv/
+venv/
+.env
+.env.*
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Local app data
+data.db
+*.db
+*.sqlite3
+
+# Media / build artifacts
+*.log
+*.mp3
+*.wav
+*.mp4
+*.avi
+*.mov
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
