@@ -30,8 +30,8 @@ class BaseExercise(ABC):
 
     @abstractmethod
     def process(self, landmarks):
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def reset(self):
-        pass
+        pass # pragma: no cover
