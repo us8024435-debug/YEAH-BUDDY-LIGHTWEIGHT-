@@ -22,7 +22,6 @@ from services.coaching.tts import TextToSpeech
 from services.coaching.voice_pipeline import VoicePipeline, autoplay_audio
 from streamlit.runtime.secrets import StreamlitSecretNotFoundError
 
-
 def get_groq_api_key():
     for env_key in ("GROQ_API_KEY", "GROK_API_KEY"):
         value = os.environ.get(env_key, "")
@@ -60,6 +59,18 @@ def _get_config_value(*keys):
 
 
 def get_webrtc_rtc_configuration():
+    twilio_sid = _get_config_value("TWILIO_ACCOUNT_SID")
+    twilio_token = _get_config_value("TWILIO_AUTH_TOKEN")
+
+    if twilio_sid and twilio_token:
+        try:
+            from twilio.rest import Client
+            client = Client(twilio_sid, twilio_token)
+            token = client.tokens.create()
+            return {"iceServers": token.ice_servers}
+        except Exception as e:
+            st.error(f"Failed to fetch Twilio ICE servers: {e}")
+
     ice_servers = [
         {"urls": ["stun:stun.l.google.com:19302"]},
     ]
