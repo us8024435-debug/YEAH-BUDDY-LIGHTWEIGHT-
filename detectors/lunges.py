@@ -37,17 +37,13 @@ class LungesDetector(BaseExercise):
         )
 
         if left_knee_angle <= right_knee_angle:
-            front_knee_angle = left_knee_angle
-            front_hip_idx = self.LEFT_HIP
-            front_knee_idx = self.LEFT_KNEE
-            front_ankle_idx = self.LEFT_ANKLE
-            shoulder_idx_for_torso = self.LEFT_SHOULDER
+            front_knee_angle, front_hip_idx, front_knee_idx, front_ankle_idx, shoulder_idx_for_torso = (
+                left_knee_angle, self.LEFT_HIP, self.LEFT_KNEE, self.LEFT_ANKLE, self.LEFT_SHOULDER
+            )
         else:
-            front_knee_angle = right_knee_angle
-            front_hip_idx = self.RIGHT_HIP
-            front_knee_idx = self.RIGHT_KNEE
-            front_ankle_idx = self.RIGHT_ANKLE
-            shoulder_idx_for_torso = self.RIGHT_SHOULDER
+            front_knee_angle, front_hip_idx, front_knee_idx, front_ankle_idx, shoulder_idx_for_torso = (
+                right_knee_angle, self.RIGHT_HIP, self.RIGHT_KNEE, self.RIGHT_ANKLE, self.RIGHT_SHOULDER
+            )
 
         key_landmarks_visible = landmarks[front_hip_idx].visibility > self.MIN_VISIBILITY and landmarks[front_knee_idx].visibility > self.MIN_VISIBILITY and landmarks[front_ankle_idx].visibility > self.MIN_VISIBILITY
 

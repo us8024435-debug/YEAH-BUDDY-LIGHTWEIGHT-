@@ -28,6 +28,16 @@ class BaseExercise(ABC):
 
         return (p.x, p.y)
 
+    def get_most_visible_side(self, landmarks, left_indicator, right_indicator, left_values, right_values):
+        """
+        Returns left_values if the left_indicator landmark is more or equally visible
+        compared to right_indicator, otherwise returns right_values.
+        """
+        left_vis = landmarks[left_indicator].visibility
+        right_vis = landmarks[right_indicator].visibility
+
+        return left_values if left_vis >= right_vis else right_values
+
     @abstractmethod
     def process(self, landmarks):
         pass

@@ -35,15 +35,13 @@ class SquatDetector(BaseExercise):
             self.get_point(landmarks, self.RIGHT_ANKLE)
         )
 
-        left_vis = landmarks[self.LEFT_KNEE].visibility
-        right_vis = landmarks[self.RIGHT_KNEE].visibility
-
-        if left_vis >= right_vis:
-            knee_angle = left_knee_angle
-            hip_idx, knee_idx, ankle_idx, shoulder_idx = self.LEFT_HIP, self.LEFT_KNEE, self.LEFT_ANKLE, self.LEFT_SHOULDER
-        else:
-            knee_angle = right_knee_angle
-            hip_idx, knee_idx, ankle_idx, shoulder_idx = self.RIGHT_HIP, self.RIGHT_KNEE, self.RIGHT_ANKLE, self.RIGHT_SHOULDER
+        knee_angle, hip_idx, knee_idx, ankle_idx, shoulder_idx = self.get_most_visible_side(
+            landmarks,
+            self.LEFT_KNEE,
+            self.RIGHT_KNEE,
+            (left_knee_angle, self.LEFT_HIP, self.LEFT_KNEE, self.LEFT_ANKLE, self.LEFT_SHOULDER),
+            (right_knee_angle, self.RIGHT_HIP, self.RIGHT_KNEE, self.RIGHT_ANKLE, self.RIGHT_SHOULDER)
+        )
 
         back_angle = self.calculate_angle(
             self.get_point(landmarks, shoulder_idx),
