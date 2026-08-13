@@ -61,7 +61,26 @@ def _get_config_value(*keys):
 
 def get_webrtc_rtc_configuration():
     ice_servers = [
-        {"urls": ["stun:stun.l.google.com:19302"]},
+        {
+            "urls": [
+                "stun:stun.l.google.com:19302",
+                "stun:stun1.l.google.com:19302",
+                "stun:stun2.l.google.com:19302",
+                "stun:stun3.l.google.com:19302",
+                "stun:stun4.l.google.com:19302",
+                "stun:stun.services.mozilla.com",
+                "stun:global.stun.twilio.com:3478",
+            ]
+        },
+        {
+            "urls": [
+                "turn:openrelay.metered.ca:80",
+                "turn:openrelay.metered.ca:443",
+                "turn:openrelay.metered.ca:443?transport=tcp",
+            ],
+            "username": "openrelay",
+            "credential": "openrelay",
+        },
     ]
 
     turn_url = _get_config_value("TURN_SERVER_URL")
@@ -79,7 +98,10 @@ def get_webrtc_rtc_configuration():
 
         ice_servers.insert(0, turn_server)
 
-    return {"iceServers": ice_servers}
+    try:
+        return RTCConfiguration(dict(iceServers=ice_servers, ice_servers=ice_servers))
+    except Exception:
+        return {"iceServers": ice_servers, "ice_servers": ice_servers}
 
 
 def init_voice_pipeline():
