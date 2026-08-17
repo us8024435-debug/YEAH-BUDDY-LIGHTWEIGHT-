@@ -24,7 +24,7 @@ class LLMCoach:
         try:
             print(f"[LLMCoach] Calling Groq API — event={event} | has_issue={bool(issue)}")
             response = self.client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
+                model="meta-llama/llama-4-scout-17b-16e-instruct",
                 messages=messages,
                 temperature=0.4,
             )
