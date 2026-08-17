@@ -1,5 +1,6 @@
 libgl1
 libegl1
+libgles2
 libstdc++6
 libsm6
 libxext6
