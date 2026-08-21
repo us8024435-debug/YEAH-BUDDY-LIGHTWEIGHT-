@@ -1,4 +1,8 @@
+import re
+
 from services.config.workout_config import PROMPT
+
+_THINK_RE = re.compile(r"<think>.*?</think>\s*", re.DOTALL)
 
 
 class LLMCoach:
@@ -6,6 +10,11 @@ class LLMCoach:
         self.client = groq_client
         self.history = []
         self.system_prompt = PROMPT
+
+    @staticmethod
+    def _strip_thinking(text: str) -> str:
+        """Remove <think>…</think> blocks emitted by reasoning models."""
+        return _THINK_RE.sub("", text).strip()
 
     def give_feedback(self, event, issue):
         prompt = f"Event: {event}"
@@ -29,7 +38,7 @@ class LLMCoach:
                 temperature=0.4,
             )
 
-            text = response.choices[0].message.content.strip()
+            text = self._strip_thinking(response.choices[0].message.content.strip())
             self.history.append(user_msg)
             self.history.append({"role": "assistant", "content": text})
             self.last_error = None
