@@ -25,21 +25,13 @@ class ShoulderPressDetector(BaseExercise):
         self.stage = None
 
     def process(self, landmarks) -> dict:
-        left_vis = landmarks[self.LEFT_ELBOW].visibility
-        right_vis = landmarks[self.RIGHT_ELBOW].visibility
-
-        if left_vis >= right_vis:
-            shoulder_idx = self.LEFT_SHOULDER
-            elbow_idx = self.LEFT_ELBOW
-            wrist_idx = self.LEFT_WRIST
-            hip_idx = self.LEFT_HIP
-            knee_idx = self.LEFT_KNEE
-        else:
-            shoulder_idx = self.RIGHT_SHOULDER
-            elbow_idx = self.RIGHT_ELBOW
-            wrist_idx = self.RIGHT_WRIST
-            hip_idx = self.RIGHT_HIP
-            knee_idx = self.RIGHT_KNEE
+        shoulder_idx, elbow_idx, wrist_idx, hip_idx, knee_idx = self.get_most_visible_side(
+            landmarks,
+            self.LEFT_ELBOW,
+            self.RIGHT_ELBOW,
+            (self.LEFT_SHOULDER, self.LEFT_ELBOW, self.LEFT_WRIST, self.LEFT_HIP, self.LEFT_KNEE),
+            (self.RIGHT_SHOULDER, self.RIGHT_ELBOW, self.RIGHT_WRIST, self.RIGHT_HIP, self.RIGHT_KNEE)
+        )
 
         elbow_angle = self.calculate_angle(
             self.get_point(landmarks, shoulder_idx),
