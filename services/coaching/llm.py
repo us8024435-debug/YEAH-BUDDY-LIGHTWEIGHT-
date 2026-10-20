@@ -1,8 +1,11 @@
 import re
+import os
 
 from services.config.workout_config import PROMPT
 
 _THINK_RE = re.compile(r"<think>.*?</think>\s*", re.DOTALL)
+
+DEFAULT_MODEL = "qwen/qwen3.8-27b"
 
 
 class LLMCoach:
@@ -10,6 +13,7 @@ class LLMCoach:
         self.client = groq_client
         self.history = []
         self.system_prompt = PROMPT
+        self.model = os.environ.get("GROQ_MODEL", DEFAULT_MODEL)
 
     @staticmethod
     def _strip_thinking(text: str) -> str:
@@ -33,7 +37,7 @@ class LLMCoach:
         try:
             print(f"[LLMCoach] Calling Groq API — event={event} | has_issue={bool(issue)}")
             response = self.client.chat.completions.create(
-                model="qwen/qwen3.6-27b",
+                model=self.model,
                 messages=messages,
                 temperature=0.4,
             )
@@ -57,4 +61,3 @@ class LLMCoach:
                 "ongoing_form_check": "Looking good! Keep your core tight!",
             }
             return fallback.get(event, "Keep going, you've got this!")
-    

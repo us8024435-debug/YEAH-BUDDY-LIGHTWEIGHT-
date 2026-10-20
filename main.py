@@ -259,6 +259,7 @@ def render_sidebar(workout_started):
         else:
             st.success("✅ AI Coach initialized")
             llm = vp.llm
+            st.caption(f"Model: `{llm.model}`")
             if hasattr(llm, "last_error") and llm.last_error:
                 st.warning(f"⚠️ Last API error:\n`{llm.last_error}`")
             else:
