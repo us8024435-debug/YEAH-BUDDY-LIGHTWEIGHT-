@@ -40,6 +40,7 @@ class LLMCoach:
                 model=self.model,
                 messages=messages,
                 temperature=0.4,
+                max_tokens=150,
             )
 
             text = self._strip_thinking(response.choices[0].message.content.strip())
